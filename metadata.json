@@ -1,0 +1,5 @@
+{
+  "name": "EVQuotient",
+  "description": "A FinTech + GreenTech dashboard for EV charging stations to optimize solar usage, calculate cost savings, and estimate carbon credit revenue using simulated NASA satellite data logic.",
+  "requestFramePermissions": []
+}
