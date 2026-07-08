@@ -1,0 +1,90 @@
+# CarbonFlow EV
+
+**EV Charging Station Optimization & Carbon Credit Engine**
+
+CarbonFlow EV is a dashboard that helps EV charging station owners understand how much of their energy demand can be met by on-site solar generation instead of the grid — showing the resulting cost savings and the carbon credit revenue that comes with it.
+
+> ⚠️ **Status: Prototype / Demo.** This project currently runs on simulated data (see [Data Sources](#data-sources) below). It is not connected to a live charging station, inverter, or grid meter.
+
+## Live Demo
+
+[carbonflow-ev-513804914430.asia-southeast1.run.app](https://carbonflow-ev-513804914430.asia-southeast1.run.app/)
+
+## The Problem
+
+EV charging stations draw a lot of power, and most of that power still comes from the grid at full tariff rates — even when the station has solar panels installed. Station owners often don't have an easy way to see:
+
+- How much of their EV charging demand solar is actually covering, hour by hour
+- How much money that's saving them vs. pure grid power
+- How to size their solar + battery setup for their specific usage pattern
+- The carbon credit value they're generating by offsetting grid electricity
+
+CarbonFlow EV brings all of this into one view.
+
+## Features
+
+- **Station configuration** — set solar capacity (kW) and battery storage (kWh) via sliders, and pick a customer segment (Tech Park/Commercial, Institution/Hospital, Residential Complex) that applies a realistic tariff and usage profile
+- **Solar Generation vs EV Demand** — real-time chart comparing solar output against charging load throughout the day
+- **Cost Savings Analysis** — grid cost with vs. without solar, broken down by time-of-day block
+- **Battery State of Charge (SOC)** — simulated charge/discharge cycle over 24 hours
+- **Carbon Revenue** — estimated carbon credit income based on CO₂ offset from solar usage
+- **Recommendations** — simple rule-based suggestions (e.g., increasing battery storage to capture more solar for evening discharge)
+- **Projected Annual ROI** — combined view of electricity savings + carbon credit revenue and their impact on breakeven
+- **Export Report** — generate a shareable summary of the current configuration and results
+
+## Data Sources
+
+| Data | Source | Status |
+|---|---|---|
+| Solar irradiance / weather | [NASA POWER API](https://power.larc.nasa.gov/) | Real — pulled for the configured latitude/longitude |
+| EV charging demand profile | Synthetic model | Simulated, based on customer segment (e.g., daytime-heavy for Tech Park, overnight for Residential) |
+| Grid tariffs | Configured per segment | Illustrative, not live utility rates |
+| Battery behavior | Simple charge/discharge simulation | Simulated |
+| Carbon credit pricing | Fixed assumption | Illustrative |
+
+Solar generation is grounded in real historical/typical irradiance data for the given location via the NASA POWER API. Everything downstream of that (demand, tariffs, battery cycling, carbon pricing) is currently modeled/simulated rather than pulled from a live station, since no real deployment data is available yet.
+
+## Tech Stack
+
+- **Frontend:** React + TypeScript, Vite
+- **Charts:** Custom chart components (`SavingsChart`, `EnergyChart`, `BatteryChart`)
+- **Deployment:** Google Cloud Run (`asia-southeast1`)
+
+## Project Structure
+
+```
+├── App.tsx
+├── constants.tsx
+├── types.ts
+├── components/
+│   ├── Auth.tsx
+│   ├── InputSection.tsx
+│   ├── MetricsGrid.tsx
+│   └── charts/
+│       ├── BatteryChart.tsx
+│       ├── EnergyChart.tsx
+│       └── SavingsChart.tsx
+└── services/
+    └── engine.ts        # core simulation/calculation logic
+```
+
+## Roadmap
+
+- [ ] Connect to real smart meter / inverter APIs (e.g., SolarEdge, Growatt, Huawei) for live solar generation data
+- [ ] Integrate with OCPP-compliant charger feeds for real EV charging demand
+- [ ] Replace fixed carbon credit pricing with live market rates
+- [ ] Add automated tests for the simulation engine
+- [ ] Modularize `engine.ts` into separate solar, battery, tariff, and carbon models
+
+## Getting Started
+
+```bash
+git clone <repo-url>
+cd EVquotient
+npm install
+npm run dev
+```
+
+## Disclaimer
+
+All monetary figures, savings percentages, and carbon offset numbers shown in the live demo are generated from a simulation and customer-segment presets. They are illustrative of the tool's capability, not real station data.
